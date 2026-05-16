@@ -6,35 +6,27 @@ import { CreateArticle } from './pages/CreateArticle';
 
 function App() {
   const [page, setPage] = useState<'login' | 'register' | 'home' | 'create'>('login');
+  const [articleToEdit, setArticleToEdit] = useState<any>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('@MindBlog:token');
-    if (token && page === 'login') {
-      setPage('home');
-    }
-  }, [page]);
+    if (token) setPage('home');
+  }, []);
 
-  // Se estiver na Home, passa a função de navegar para o botão "Novo Artigo" funcionar
-  if (page === 'home') return <Home onNavigate={(p) => setPage(p)} />;
-  
-  if (page === 'create') return <CreateArticle />;
+  const navigateToCreate = (p: 'create', article: any = null) => {
+    setArticleToEdit(article);
+    setPage(p);
+  };
+
+  if (page === 'home') return <Home onNavigate={navigateToCreate} />;
+  if (page === 'create') return <CreateArticle articleToEdit={articleToEdit} onBack={() => setPage('home')} />;
 
   return (
     <div className="App">
       {page === 'login' ? (
-        <>
-          <Login />
-          <div style={{ textAlign: 'center', marginTop: '10px' }}>
-            <button onClick={() => setPage('register')} style={{ cursor: 'pointer' }}>Não tem conta? Cadastre-se</button>
-          </div>
-        </>
+        <><Login /><center><button onClick={() => setPage('register')}>Cadastre-se</button></center></>
       ) : (
-        <>
-          <Register />
-          <div style={{ textAlign: 'center', marginTop: '10px' }}>
-            <button onClick={() => setPage('login')} style={{ cursor: 'pointer' }}>Já tenho conta? Faça Login</button>
-          </div>
-        </>
+        <><Register /><center><button onClick={() => setPage('login')}>Voltar ao Login</button></center></>
       )}
     </div>
   );

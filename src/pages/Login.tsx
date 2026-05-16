@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../services/api';
+import { LogIn } from 'lucide-react';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,39 +10,45 @@ export const Login = () => {
     e.preventDefault();
     try {
       const response = await api.post('/login', { email, password });
-      
-      // Salva o token e os dados do usuário no navegador
       localStorage.setItem('@MindBlog:token', response.data.token);
       localStorage.setItem('@MindBlog:user', JSON.stringify(response.data.user));
-      
-      alert('Login realizado com sucesso!');
-      window.location.href = '/'; // Redireciona para a home (vamos criar depois)
+      window.location.reload(); 
     } catch (error) {
-      alert('Erro ao fazer login. Verifique suas credenciais.');
+      alert('E-mail ou senha incorretos.');
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
-      <h2>Login - Mind Blog</h2>
-      <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '300px' }}>
-        <input 
-          type="email" 
-          placeholder="E-mail" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          required 
-        />
-        <input 
-          type="password" 
-          placeholder="Senha" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
-        />
-        <button type="submit">Entrar</button>
-      </form>
-      <p>Não tem conta? <a href="/register">Cadastre-se</a></p>
+    <div style={{ minHeight: '100vh', backgroundColor: '#1a1a1a', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Arial, sans-serif', color: '#fff' }}>
+      <div style={{ backgroundColor: '#262626', padding: '40px', borderRadius: '12px', border: '1px solid #333', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
+        <h1 style={{ marginBottom: '10px', fontSize: '2rem' }}>Mind<span style={{ color: '#4da6ff' }}>Blog</span></h1>
+        <p style={{ color: '#888', marginBottom: '30px' }}>Acesse sua conta para interagir</p>
+        
+        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <input 
+            type="email" 
+            placeholder="Seu e-mail" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            required 
+            style={{ backgroundColor: '#1a1a1a', border: '1px solid #444', color: '#fff', padding: '12px', borderRadius: '6px', fontSize: '1rem', outline: 'none' }}
+          />
+          <input 
+            type="password" 
+            placeholder="Sua senha" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            required 
+            style={{ backgroundColor: '#1a1a1a', border: '1px solid #444', color: '#fff', padding: '12px', borderRadius: '6px', fontSize: '1rem', outline: 'none' }}
+          />
+          <button 
+            type="submit" 
+            style={{ backgroundColor: '#4da6ff', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginTop: '10px' }}
+          >
+            <LogIn size={20} /> Entrar
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
